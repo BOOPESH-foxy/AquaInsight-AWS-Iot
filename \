@@ -1,0 +1,15 @@
+import pyotp
+import time
+
+# The shared secret key
+secret = 'JBSWY3DPEHPK3PXP'
+
+# Generate TOTP
+totp = pyotp.TOTP(secret)
+
+# Get the current OTP
+otp = totp.now()
+
+# Print OTP
+print(f"Generated OTP: {otp}")
+
