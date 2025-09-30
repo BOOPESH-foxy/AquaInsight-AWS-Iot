@@ -17,12 +17,8 @@ def generate_sensor_data():
         print(":: Error ::",e)
         raise
 
-
 def water_params_loop():
     while True:
         data = generate_sensor_data()
         print(data)
         time.sleep(5)
-        
-
-water_params_loop()
