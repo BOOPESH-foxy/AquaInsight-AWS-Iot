@@ -16,9 +16,3 @@ def generate_sensor_data():
     except Exception as e:
         print(":: Error ::",e)
         raise
-
-def water_params_loop():
-    while True:
-        data = generate_sensor_data()
-        print(data)
-        time.sleep(5)

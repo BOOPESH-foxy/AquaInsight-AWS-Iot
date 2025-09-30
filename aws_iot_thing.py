@@ -8,3 +8,4 @@ def create_aws_thing():
     )
     thing_id = response_create_thing["thingId"]
     return thing_id
+
