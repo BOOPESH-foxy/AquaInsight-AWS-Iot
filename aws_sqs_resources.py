@@ -7,7 +7,7 @@ def create_queue():
     """Creates an AWS SQS queue"""
     try:
         response_queue_creation = sqs_client.create_queue(
-            QueueName=f'{tankName}-queue',
+            QueueName=f'{tankName}-queue-test',
             tags={
                 'TankLocation': f'{location}'
             }
@@ -39,8 +39,9 @@ def delete_queue(QueueName):
         response_deletion = sqs_client.delete_queue(
             QueueUrl=queue_url
         )
-        print(f"- Delete Queue {QueueName}")
+        print(f"- Deleted Queue {QueueName}")
 
     except Exception as e:
         print(":: Error ::",e)
         raise
+
