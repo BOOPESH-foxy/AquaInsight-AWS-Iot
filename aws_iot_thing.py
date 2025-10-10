@@ -1,6 +1,7 @@
 import json
+import time
 from tank_metadata import tankName
-from aws_iot_core import iot_client
+from aws_clients import iot_client
 from sensor_data import generate_sensor_data
 
 iot = iot_client
@@ -20,14 +21,18 @@ def create_aws_thing():
         raise
 
 def publish_sensor_data_iot():
-    
-    response_data = generate_sensor_data()
-    topic = f"{tankName}/quality/data"
-    payload = json.dumps(response_data)
+    """Generates mimiced sensor data and sends it to AWS IoT core"""
+    try:
+        while(True):
+            response_data = generate_sensor_data()
+            topic = f"{tankName}/quality/data"
+            payload = json.dumps(response_data)
 
-    json_response = iot_client.publish(topic=topic,qos=1,payload=payload)
-    print(f"Data sent to AWS IoT: {response_data}")
+            json_response = iot_client.publish(topic=topic,qos=1,payload=payload)
+            print(f"Data sent to AWS IoT: {response_data}")
+            time.sleep(5)
 
-
-publish_sensor_data_iot()
+    except Exception as e:
+        print(":: Error ::",e)
+        raise
 
