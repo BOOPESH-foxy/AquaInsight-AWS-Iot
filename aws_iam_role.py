@@ -18,6 +18,7 @@ def check_role_existence(role_name="iot_to_sqs_role"):
     except Exception as e:
         print(":: Erroe ::",e)
         raise
+    
 
 def create_iot_to_sqs_role(queue_arn, role_name = "iot_to_sqs_role"):
     """ checks for existence and in absense creates an iam role for AWS IoT to send messages to SQS and returns the role arn."""

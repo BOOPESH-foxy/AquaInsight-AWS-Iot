@@ -1,12 +1,13 @@
-from aws_iot_thing import create_aws_thing,publish_sensor_data_iot
+from sequence import create_aws_iot_sqs_resources
+
 import typer
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
 @app.command("create_thing")
-def create_aws_thing_typer():
+def create_aws_iot_resources():
     """Create AWS thing on the specified region"""
-    create_aws_thing()
+    create_aws_iot_sqs_resources()
 
 @app.command("create_rule")
 def create_aws_rule_typer():

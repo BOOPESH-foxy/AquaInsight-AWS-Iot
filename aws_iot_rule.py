@@ -31,4 +31,3 @@ def create_iot_rule():
         print(":: Error ::",e)
         raise
 
-create_iot_rule()
