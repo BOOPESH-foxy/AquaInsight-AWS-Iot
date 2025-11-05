@@ -16,13 +16,22 @@ The main components of the project include:
 ## Project Structure
 
 The repository contains the following files:
-
-- **generate_sensor_data.py**: A Python script that generates random values for TDS, turbidity, chlorine, and pH, and sends the data to AWS IoT and AWS Timestream.
-- **aws_clients.py**: A Python script for handling the boto3 clients for various resources.
-- **aws_iot_rule.py**: Create an IoT rule to route the incoming data to different AWS resources.
-- **aws_iot_thing.py**: To create an AWS thing
-- **aws_sqs_resources.py**: To manage the creation and deletion of queue in AWS SQS
-- **main.py**: Entry point for the application
+```
+    aquaInsight/
+    ├── main.py                         # Typer-based CLI entry point
+    ├── aws_clients.py                  # Centralized boto3 clients
+    ├── aws_iot/
+    │   ├── aws_iot_iam_role.py         # Creates IAM role for IoT → SQS communication
+    │   └── aws_iot_resources.py        # Handles IoT Thing & rule creation
+    ├── aws_sqs/
+    │   └── aws_sqs_resources.py        # Creates and manages SQS queues
+    ├── sensor_data_operations/
+    │   ├── generate_sensor_data.py     # Generates random sensor readings
+    │   ├── publish_sensor_data.py      # Publishes readings to IoT Core topics
+    │   └── tank_metadata.py            # Holds metadata (tank ID, district, village)
+    ├── sequence.py                     # Orchestrates setup across IoT and SQS
+    └── readme.md
+```
 
 ## Setup
 
