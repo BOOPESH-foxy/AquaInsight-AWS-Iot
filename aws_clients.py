@@ -1,6 +1,5 @@
 import os
 import boto3
-import botocore
 from dotenv import load_dotenv
 
 load_dotenv()

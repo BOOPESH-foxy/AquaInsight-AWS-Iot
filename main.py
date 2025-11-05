@@ -1,3 +1,4 @@
+from sensor_data_operations import publish_sensor_data
 from sequence import create_aws_iot_sqs_resources
 
 import typer
@@ -17,7 +18,7 @@ def create_aws_rule_typer():
 @app.command("publish_data")
 def publish_sensor_data_typer():
     """Starts publishing the sensor data to AWS IoT thing"""
-    publish_sensor_data_iot()
+    publish_sensor_data.publish_sensor_data_iot()
 
 if __name__ == "__main__":
     app()

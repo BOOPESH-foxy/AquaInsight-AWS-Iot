@@ -21,3 +21,5 @@ def publish_sensor_data_iot():
     except Exception as e:
         print(":: Error ::",e)
         raise
+
+
