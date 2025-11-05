@@ -1,5 +1,4 @@
-""" This file is used to create the IoT rule dependent resources (SQS,Timestream)"""
-from tank_metadata import tankName,location
+""" This file is used to manage the SQS resources"""
 from aws_clients import sqs_client
 sqs_client = sqs_client()
 
@@ -7,9 +6,9 @@ def create_queue():
     """Creates an AWS SQS queue"""
     try:
         response_queue_creation = sqs_client.create_queue(
-            QueueName=f'{tankName}-queue',
+            QueueName='AquaInsight-queue',
             tags={
-                'TankLocation': f'{location}'
+                'AquaInsight': 'monitoring'
             }
         )
         url =  response_queue_creation['QueueUrl']

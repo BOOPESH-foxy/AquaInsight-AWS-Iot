@@ -1,11 +1,10 @@
-from tank_metadata import tankName
-from aws_iam_role import create_iot_to_sqs_role
+from aws_iot_iam_role import create_iot_to_sqs_role
 from aws_clients import iot_client,iot_data_client
 from aws_sqs.aws_sqs_resources import create_queue,get_queue_arn
 
 client = iot_client()
 iot = iot_data_client()
-query = f"SELECT * FROM '{tankName}/quality/data'"
+query = f"SELECT * FROM 'water/quality/+/+/+/data'"
 
 def create_iot_rule():
     try:
