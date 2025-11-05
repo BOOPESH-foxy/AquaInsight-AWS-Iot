@@ -6,19 +6,20 @@ client = iot_client()
 
 def create_iot_rule():
     try:
-        url = create_queue()
-        arn = get_queue_arn(url)
+        url = str(create_queue())
+        arn = str(get_queue_arn(url))
+        print(arn,url)
         response_rule_creation = client.create_topic_rule(
             ruleName = 'aqua_data_route_rule',
             topicRulePayload={
                 'sql': f'select * from {tankName}/quality/data',
-                'description': 'string',
+                'description': 'queue - water quality parameter',
                 'actions':[{
-                    {
-                    'roleArn': arn,
+                'sqs':{
+                    # 'roleArn': arn,
                     'queueUrl': url,
                     }
-                }]
+            }]
             }
         )
 

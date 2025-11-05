@@ -15,3 +15,6 @@ def iot_client():
 
 def sqs_client():
     return boto3.client('sqs',region_name=REGION)
+
+def iam_client():
+    return boto3.client('iam',region_name=REGION)
