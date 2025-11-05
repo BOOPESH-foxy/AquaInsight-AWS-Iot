@@ -1,5 +1,5 @@
 import random
-from tank_metadata import tankId,village,district
+from sensor_data_operations.tank_metadata import tankId,village,district
 
 def generate_sensor_data():
     try:

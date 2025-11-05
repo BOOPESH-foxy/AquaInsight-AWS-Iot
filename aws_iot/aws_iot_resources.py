@@ -1,4 +1,4 @@
-from aws_iot_iam_role import create_iot_to_sqs_role
+from aws_iot.aws_iot_iam_role import create_iot_to_sqs_role
 from aws_clients import iot_client,iot_data_client
 from aws_sqs.aws_sqs_resources import create_queue,get_queue_arn
 
@@ -25,7 +25,6 @@ def create_iot_rule():
             }
         )
         ruleId = response_rule_creation
-        print(ruleId)
 
     except Exception as e:
         print(":: Error ::",e)
@@ -34,11 +33,10 @@ def create_iot_rule():
 def create_iot_thing():
     """Creates thing if not exists with specified name and prints the created id else prints the id if a thing exists with the given name"""
     try:
-        response_create_thing = iot.create_thing(
+        response_create_thing = client.create_thing(
             thingName = 'AquaInsight'
         )
         thing_id = response_create_thing["thingId"]
-        print("+ Thing Id ",thing_id)
         return thing_id
 
     except Exception as e:

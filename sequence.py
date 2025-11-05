@@ -1,5 +1,4 @@
-from aws_iot_resources import create_iot_thing
-from aws_iot_resources import create_iot_rule
+from aws_iot.aws_iot_resources import create_iot_thing,create_iot_rule
 
 def create_aws_iot_sqs_resources():
     """Creates the complete IoT and SQS needed resources"""

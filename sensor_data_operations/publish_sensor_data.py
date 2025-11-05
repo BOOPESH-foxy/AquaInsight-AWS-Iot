@@ -1,8 +1,8 @@
 import time
 import json
-from tank_metadata import tankId,district,village
+from sensor_data_operations.tank_metadata import tankId,district,village
 from aws_clients import iot_data_client
-from generate_sensor_data import generate_sensor_data
+from sensor_data_operations.generate_sensor_data import generate_sensor_data
 
 iot = iot_data_client()
 

@@ -5,7 +5,7 @@ import typer
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
-@app.command("create_thing")
+@app.command("create_iot_resources")
 def create_aws_iot_resources():
     """Create AWS thing on the specified region"""
     create_aws_iot_sqs_resources()
