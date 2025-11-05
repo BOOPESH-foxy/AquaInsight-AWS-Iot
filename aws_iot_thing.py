@@ -20,6 +20,7 @@ def create_aws_thing():
         print(":: Error ::",e)
         raise
 
+
 def publish_sensor_data_iot():
     """Generates mimiced sensor data and sends it to AWS IoT core"""
     try:
