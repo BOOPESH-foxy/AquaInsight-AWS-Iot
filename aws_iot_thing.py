@@ -4,7 +4,7 @@ from tank_metadata import tankName
 from aws_clients import iot_client
 from sensor_data import generate_sensor_data
 
-iot = iot_client
+iot = iot_client()
 
 def create_aws_thing():
     """Creates thing if not exists with specified name and prints the created id else prints the id if a thing exists with the given name"""
@@ -28,11 +28,10 @@ def publish_sensor_data_iot():
             topic = f"{tankName}/quality/data"
             payload = json.dumps(response_data)
 
-            json_response = iot_client.publish(topic=topic,qos=1,payload=payload)
+            json_response = iot.publish(topic=topic,qos=1,payload=payload)
             print(f"Data sent to AWS IoT: {response_data}")
             time.sleep(5)
 
     except Exception as e:
         print(":: Error ::",e)
         raise
-
