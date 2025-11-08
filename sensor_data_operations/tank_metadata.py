@@ -1,3 +1,5 @@
 tankId = "WaterTank1"
 village = "k.a-p"
 district = "Karur"
+endpoint = ""
+topic = f"water/quality/{district}/{village}/{tankId}/command"

@@ -1,4 +1,4 @@
-from sensor_data_operations import publish_sensor_data
+from sensor_data_operations import publish_sensor_data,mqtt_listener_client
 from sequence import create_aws_iot_sqs_resources
 
 import typer
@@ -19,6 +19,11 @@ def create_aws_rule_typer():
 def publish_sensor_data_typer():
     """Starts publishing the sensor data to AWS IoT thing"""
     publish_sensor_data.publish_sensor_data_iot()
+
+@app.command("mqtt_listener")
+def publish_sensor_data_typer():
+    """Starts listening to AWS IoT topic - response from ECS"""
+    mqtt_listener_client.topic_listener
 
 if __name__ == "__main__":
     app()
