@@ -1,7 +1,7 @@
 import os
 import json
-from dotenv import load_dotenv
 from awscrt import io,mqtt
+from dotenv import load_dotenv
 from awsiot import mqtt_connection_builder
 from sensor_data_operations.tank_metadata import topic,endpoint
 
@@ -24,7 +24,7 @@ def response_message_processor(payload):
         pass
 
 
-def main():
+def topic_listener():
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
         endpoint = endpoint,
         keep_alive_secs=30
