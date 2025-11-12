@@ -20,3 +20,9 @@ def iam_client():
 
 def timestream_client():
     return boto3.client('timestream-write',region_name=REGION)
+
+def ec2_client():
+    return boto3.client('ec2',region_name = REGION)
+
+def ec2_resource():
+    return boto3.resource('ec2')
