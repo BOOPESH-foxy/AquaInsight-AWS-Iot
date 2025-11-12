@@ -31,3 +31,32 @@ def check_vpc_existence():
     else:
         print(f"! Vpc {VPC_NAME} doesn't exist.")
         return False
+
+
+def create_vpc():
+    vpc_id = check_vpc_existence()
+    if(vpc_id):
+        return vpc_id
+    else:
+        try:
+            print("! Creating VPC ")
+            response_vpc = ec2.create_vpc(
+            CidrBlock = CIDR_BLOCK,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'vpc',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': VPC_NAME
+                        },
+                    ],
+                },
+            ],
+            )
+            vpc_id = response_vpc["Vpc"]["VpcId"]
+            print(f"+ Created VPC id={vpc_id}")
+            return vpc_id
+        
+        except botocore.exceptions.ClientError as e:
+            print(":: Error :",e)
