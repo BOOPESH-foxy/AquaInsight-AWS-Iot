@@ -1,4 +1,3 @@
-from aws_iot.aws_iot_resources import create_iot_thing,create_iot_rule
 
 def create_aws_iot_sqs_resources():
     """Creates the complete IoT and SQS needed resources"""
@@ -8,3 +7,8 @@ def create_aws_iot_sqs_resources():
 
 def create_aws_db_resouces():
     pass
+
+
+def create_aws_sqs_resouces():
+    url = create_queue()
+    arn = get_queue_arn(url)

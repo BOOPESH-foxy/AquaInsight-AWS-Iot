@@ -2,11 +2,9 @@ import json
 import time
 from botocore.exceptions import ClientError
 from aws_clients import iam_client
-
 client = iam_client()
 
-
-def check_role_existence(role_name: str):
+def check_role_existence(role_name: str = "ecs_task_role"):
     """Check if an IAM role exists. Return its ARN if it exists, else None."""
     try:
         response_existence = client.get_role(RoleName=role_name)
@@ -95,3 +93,4 @@ def create_ecs_task_role(queue_arn: str, role_name: str = "ecs_task_role") -> st
         raise
 
 
+create_ecs_task_role()

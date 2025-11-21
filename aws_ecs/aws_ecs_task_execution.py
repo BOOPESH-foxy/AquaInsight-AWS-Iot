@@ -1,7 +1,6 @@
 import json
 from botocore.exceptions import ClientError
 from aws_clients import iam_client
-
 client = iam_client()
 
 
