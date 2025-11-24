@@ -1,6 +1,7 @@
 from aws_iot.aws_iot_resources import *
 from aws_sqs.aws_sqs_resources import *
 from aws_ecs.aws_ecs_resources import *
+from aws_ecs_infra.vpc import setup_ecs_infra
 
 from sensor_data_operations import publish_sensor_data,mqtt_listener_client
 
@@ -8,7 +9,7 @@ import typer
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
-@app.command("create_iot_sqs_resources")
+@app.command("create_infrastructure")
 def create_aws_iot_resources():
     """Create AWS resources on the specified region"""
     url = create_queue()
@@ -17,12 +18,14 @@ def create_aws_iot_resources():
     response_rule_creation = create_iot_rule(url,role_arn)
 
     ecs_roles = create_task_roles(queue_arn=arn)
+    vpc_resource_list =  setup_ecs_infra()
 
 
 @app.command("publish_data")
 def publish_sensor_data_typer():
     """Starts publishing the sensor data to AWS IoT thing"""
     publish_sensor_data.publish_sensor_data_iot()
+
 
 @app.command("mqtt_listener")
 def publish_sensor_data_typer():
