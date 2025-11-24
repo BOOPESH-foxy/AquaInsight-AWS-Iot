@@ -27,5 +27,8 @@ def ec2_client():
 def ec2_resource():
     return boto3.resource('ec2')
 
-def ec2_client():
-    return boto3.client('ec2',region_name=REGION)
+def ecs_client():
+    return boto3.client("ecs")
+
+def ecr_client():
+    return boto3.client("ecr")

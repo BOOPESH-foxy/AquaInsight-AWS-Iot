@@ -266,7 +266,6 @@ def setup_ecs_infra():
     sg_id = create_security_group(vpc_id)
     igw_id = create_internet_gateway(vpc_id)
 
-    # limit AZs to number of CIDRs we have
     azs = get_availability_zones(max_azs=len(SUBNET_CIDR_BLOCKS))
     subnet_ids = create_subnets_for_vpc(vpc_id, azs)
 
@@ -283,6 +282,3 @@ def setup_ecs_infra():
         "availability_zones": [az["ZoneName"] for az in azs],
     }
 
-
-
-setup_ecs_infra()
