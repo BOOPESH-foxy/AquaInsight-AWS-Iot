@@ -85,12 +85,10 @@ def create_ecs_task_role(queue_arn: str, role_name: str = "ecs_task_role") -> st
             raise RuntimeError(
                 f"Role {role_name} was created but could not be retrieved."
             )
-
-        return role_existence
+        else:
+            print("+ Created Role ")
+            return role_existence
 
     except Exception as e:
         print(":: Error ::", e)
         raise
-
-
-create_ecs_task_role()

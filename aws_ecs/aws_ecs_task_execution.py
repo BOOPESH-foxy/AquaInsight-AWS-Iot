@@ -51,7 +51,7 @@ def create_ecs_task_execution_role(role_name: str = "ecsTaskExecutionRole") -> s
             PolicyArn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
         )
 
-        print(f"Created ECS task execution role: {role_name}")
+        print(f"+ Created ECS task execution role: {role_name}")
         return role_arn
 
     except Exception as e:

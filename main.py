@@ -1,22 +1,23 @@
 from aws_iot.aws_iot_resources import *
 from aws_sqs.aws_sqs_resources import *
+from aws_ecs.aws_ecs_resources import *
 
 from sensor_data_operations import publish_sensor_data,mqtt_listener_client
-from sequence import create_aws_iot_sqs_resources
 
 import typer
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
-@app.command("create_iot_resources")
+@app.command("create_iot_sqs_resources")
 def create_aws_iot_resources():
-    """Create AWS thing on the specified region"""
-    create_aws_iot_sqs_resources()
+    """Create AWS resources on the specified region"""
+    url = create_queue()
+    arn = get_queue_arn(url)
+    role_arn = create_iot_to_sqs_role(queue_arn=arn)
+    response_rule_creation = create_iot_rule(url,role_arn)
 
-@app.command("create_rule")
-def create_aws_rule_typer():
-    """Creates IoT rule to send the received data to required AWS resources(such as s3,timestream etc)"""
-    pass
+    ecs_roles = create_task_roles(queue_arn=arn)
+
 
 @app.command("publish_data")
 def publish_sensor_data_typer():
