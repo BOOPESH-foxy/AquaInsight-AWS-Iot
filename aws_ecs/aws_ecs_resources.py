@@ -11,9 +11,8 @@ def create_task_roles(queue_arn):
 
 def create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,queue_url):
     data = vpc_resource_list
-    print(vpc_resource_list)
-    subnet_ids = vpc_resource_list[0]
-    sg_id = vpc_resource_list[1]
+    subnet_ids = vpc_resource_list['subnet_ids']
+    sg_id = vpc_resource_list['security_group_id']
     cluster_arn = create_cluster()
     image_uri = get_image_uri()
     task_definition_arn = register_task_definition(image_uri,task_role_arn,task_execution_role_arn,queue_url)

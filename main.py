@@ -20,10 +20,10 @@ def create_aws_resources():
     ecs_roles = create_task_roles(queue_arn=arn)
 
     vpc_resource_list =  setup_ecs_infra()
-    
-    # task_role_arn = ecs_roles[0]
-    # task_execution_role_arn = ecs_roles[1]
-    # create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
+
+    task_role_arn = ecs_roles[0]
+    task_execution_role_arn = ecs_roles[1]
+    create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
 
 
 @app.command("publish_data")
