@@ -68,7 +68,7 @@ def create_iot_to_sqs_role(queue_arn, role_name = "iot_to_sqs_role"):
                 PolicyDocument=json.dumps(policy_doc),
             )
 
-            time.sleep(3)
+            time.sleep(6)
             role_existence = check_role_existence(role_name)
             return role_arn
 

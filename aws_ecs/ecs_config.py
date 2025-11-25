@@ -11,7 +11,7 @@ image_tag = 'latest'
 
 AWS_REGION       = os.getenv("REGION")
 ACCOUNT_ID       = os.getenv("ACCOUNT_ID")
-LOG_GROUP = os.getenv("LOG_GROUP")
+LOG_GROUP        = os.getenv("LOG_GROUP")
 ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")

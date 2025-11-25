@@ -9,7 +9,7 @@ LOG_GROUP = os.getenv("LOG_GROUP")
 
 logs = logs_client()
 
-def ensure_log_group():
+def create_log_group():
     try:
         logs.create_log_group(logGroupName=LOG_GROUP)
         print(f"+ Created log group {LOG_GROUP}")

@@ -32,3 +32,6 @@ def ecs_client():
 
 def ecr_client():
     return boto3.client("ecr")
+
+def logs_client():
+    return boto3.client("logs")
