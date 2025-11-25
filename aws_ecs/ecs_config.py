@@ -76,7 +76,6 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                     "name": "aqua-container",
                     "image": image_uri,
                     "essential": True,
-                    "command": ["python", "main.py"],
                     "environment": [
                         {"name": "AWS_REGION", "value": AWS_REGION},
                         {"name": "SQS_QUEUE_URL", "value": queue_url},

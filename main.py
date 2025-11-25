@@ -10,7 +10,7 @@ import typer
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
 @app.command("create_infrastructure")
-def create_aws_iot_resources():
+def create_aws_resources():
     """Create AWS resources on the specified region"""
     url = create_queue()
     arn = get_queue_arn(url)
@@ -18,8 +18,12 @@ def create_aws_iot_resources():
     response_rule_creation = create_iot_rule(url,role_arn)
 
     ecs_roles = create_task_roles(queue_arn=arn)
+
     vpc_resource_list =  setup_ecs_infra()
-    creaet
+    
+    # task_role_arn = ecs_roles[0]
+    # task_execution_role_arn = ecs_roles[1]
+    # create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
 
 
 @app.command("publish_data")

@@ -41,6 +41,7 @@ def get_availability_zones(max_azs: int | None = None):
     chosen = zones[:max_azs]
     azs = [{"ZoneName": z["ZoneName"], "ZoneId": z["ZoneId"]} for z in chosen]
     print("! Using AZs:", ", ".join([z["ZoneName"] for z in azs]))
+    print("\n")
     return azs
 
 
@@ -223,6 +224,7 @@ def create_subnets_for_vpc(vpc_id: str, azs: list[dict]):
             print(f"! Subnet already exists in {az_name} ({subnet_id}), reusing.")
             subnet_ids.append(subnet_id)
             continue
+        print("\n")
 
         try:
             print(f"! Creating subnet in {az_name} with CIDR {cidr}")
