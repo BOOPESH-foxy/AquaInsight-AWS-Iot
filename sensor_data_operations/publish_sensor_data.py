@@ -16,7 +16,7 @@ def publish_sensor_data_iot():
 
             json_response = iot.publish(topic=topic,qos=1,payload=payload)
             print(f"Data sent to AWS IoT: {response_data}")
-            time.sleep(10)
+            time.sleep(0.1)
 
     except Exception as e:
         print(":: Error ::",e)
