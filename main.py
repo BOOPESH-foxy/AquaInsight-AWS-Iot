@@ -19,7 +19,7 @@ def create_aws_iot_resources():
 
     ecs_roles = create_task_roles(queue_arn=arn)
     vpc_resource_list =  setup_ecs_infra()
-    crea
+    creaet
 
 
 @app.command("publish_data")
