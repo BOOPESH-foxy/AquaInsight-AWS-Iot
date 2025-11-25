@@ -11,7 +11,7 @@ image_tag = 'latest'
 
 AWS_REGION       = os.getenv("REGION")
 ACCOUNT_ID       = os.getenv("ACCOUNT_ID")
-
+LOG_GROUP = os.getenv("LOG_GROUP")
 ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
@@ -83,7 +83,7 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                     "logConfiguration": {
                         "logDriver": "awslogs",
                         "options": {
-                            "awslogs-group": "/ecs/aqua-container",
+                            "awslogs-group": LOG_GROUP,
                             "awslogs-region": AWS_REGION,
                             "awslogs-stream-prefix": "aqua",
                         },
