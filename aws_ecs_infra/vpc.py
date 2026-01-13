@@ -1,5 +1,5 @@
 import os
-import botocore
+from botocore import loaders
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 
