@@ -32,8 +32,8 @@ def publish_sensor_data_typer():
     publish_sensor_data.publish_sensor_data_iot()
 
 
-@app.command("mqtt_listener")
-def publish_sensor_data_typer():
+@app.command("iot_listener")
+def listener_sensor_data_typer():
     """Starts listening to AWS IoT topic - response from ECS"""
     mqtt_listener_client.topic_listener()
 

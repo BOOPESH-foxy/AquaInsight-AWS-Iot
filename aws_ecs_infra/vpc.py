@@ -1,5 +1,4 @@
 import os
-from botocore import loaders
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 
@@ -143,6 +142,24 @@ def create_security_group(vpc_id: str):
         )
         sg_id = response_security_group["GroupId"]
         print("+ Created Security Group id=", sg_id)
+        ec2.authorize_security_group_egress(
+            GroupId=sg_id,
+            IpPermissions=[
+                {
+                    'IpProtocol': 'tcp',
+                    'FromPort': 443,
+                    'ToPort': 443,
+                    'IpRanges': [{'CidrIp': '0.0.0.0/0', 'Description': 'HTTPS for AWS APIs'}]
+                },
+                {
+                    'IpProtocol': 'tcp', 
+                    'FromPort': 80,
+                    'ToPort': 80,
+                    'IpRanges': [{'CidrIp': '0.0.0.0/0', 'Description': 'HTTP for package installs'}]
+                }
+            ]
+        )
+
         return sg_id
 
     except ClientError as e:
@@ -271,10 +288,11 @@ def setup_ecs_infra():
     azs = get_availability_zones(max_azs=len(SUBNET_CIDR_BLOCKS))
     subnet_ids = create_subnets_for_vpc(vpc_id, azs)
 
-    route_table_ids = []
-    for subnet_id in subnet_ids:
-        rt_id = modify_route_table(vpc_id, subnet_id, igw_id)
-        route_table_ids.append(rt_id)
+    # Create ONE route table, associate with ALL subnets
+    rt_id = modify_route_table(vpc_id, subnet_ids[0], igw_id)  # Create once
+    for subnet_id in subnet_ids[1:]:
+        ec2.associate_route_table(RouteTableId=rt_id, SubnetId=subnet_id)
+    route_table_ids = [rt_id]
 
     return {
         "vpc_id": vpc_id,
