@@ -1,11 +1,9 @@
 import os
 from dotenv import load_dotenv
-
-from aws_clients import ecs_client
-from aws_ecs_infra.vpc import setup_ecs_infra
+from aws_clients import ecs_client,ecr_client
 
 load_dotenv()
-
+ecr = ecr_client()
 ecs = ecs_client()
 image_tag = 'latest'
 
@@ -16,6 +14,20 @@ ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
 TASK_FAMILY      = os.getenv("ECS_TASK_FAMILY")
+
+def ensure_ecr_repository():
+    """ensures ecr repository exists else creates one if it doesn't """
+    
+    try:
+        response = ecr.describe_repositories(repositoryNames=[ECR_REPOSITORY])
+        print(f"! ECR repository '{ECR_REPOSITORY}' already exists")
+        return response['repositories'][0]['repositoryUri']
+
+    except ecr.exceptions.RepositoryNotFoundException:
+        print(f"! Creating ECR repository '{ECR_REPOSITORY}'...")
+        response = ecr.create_repository(repositoryName=ECR_REPOSITORY)
+        print(f"+ Created ECR repository: {ECR_REPOSITORY}")
+        return response['repository']['repositoryUri']
 
 
 def get_image_uri():
@@ -41,6 +53,10 @@ def create_cluster():
         print(f"! Creating ECS cluster '{CLUSTER_NAME}'...")
         response = ecs.create_cluster(
             clusterName=CLUSTER_NAME
+            tags=[
+                    {'key': 'AquaInsight', 'value': 'ECS'},
+                    {'key': 'Name', 'value': CLUSTER_NAME}
+                ]
             )
 
         cluster_arn = response["cluster"]["clusterArn"]
@@ -76,6 +92,14 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                     "name": "aqua-container",
                     "image": image_uri,
                     "essential": True,
+                    "stopTimeout":30,
+                    "healthCheck": {
+                        "command": ["CMD-SHELL", "python -c 'import boto3; print(\"healthy\")'"],
+                        "interval": 30,
+                        "timeout": 5,
+                        "retries": 3,
+                        "startPeriod": 60
+                    },                    
                     "environment": [
                         {"name": "AWS_REGION", "value": AWS_REGION},
                         {"name": "SQS_QUEUE_URL", "value": queue_url},
