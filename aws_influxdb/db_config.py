@@ -5,7 +5,6 @@ from aws_clients import timestream_influxdb_client
 
 load_dotenv()
 
-# InfluxDB Configuration
 INFLUX_DB_INSTANCE_NAME = os.getenv("INFLUX_DB_INSTANCE_NAME")
 INFLUX_DB_INSTANCE_TYPE = os.getenv("INFLUX_DB_INSTANCE_TYPE")
 INFLUX_STORAGE_TYPE = os.getenv("INFLUX_STORAGE_TYPE")
@@ -23,10 +22,18 @@ def create_influxdb_instance(subnet_ids, security_group_ids):
     try:
         response = client.get_db_instance(identifier=INFLUX_DB_INSTANCE_NAME)
         print(f"! InfluxDB instance '{INFLUX_DB_INSTANCE_NAME}' already exists")
-        return response['dbInstance']
+        instance = response['dbInstance']
         
+        if instance['status'] == 'available':
+            endpoint = instance['endpoint']
+            print(f"! InfluxDB endpoint: https://{endpoint}:8086")
+            return instance
+        else:
+            print(f"! InfluxDB instance status: {instance['status']}")
+            return instance
+            
     except ClientError as e:
-        if e.response['Error']['Code'] != 'ResourceNotFoundFault':
+        if e.response['Error']['Code'] != 'ResourceNotFoundException':  # Fixed!
             raise
     
     print(f"! Creating InfluxDB instance '{INFLUX_DB_INSTANCE_NAME}'...")
@@ -43,33 +50,32 @@ def create_influxdb_instance(subnet_ids, security_group_ids):
             password=INFLUX_PASSWORD,
             organization=INFLUX_ORGANIZATION,
             bucket=INFLUX_BUCKET,
-            publiclyAccessible=False,
-            tags=[
-                {'key': 'AquaInsight', 'value': 'InfluxDB'},
-                {'key': 'Name', 'value': INFLUX_DB_INSTANCE_NAME}
-            ]
+            publiclyAccessible=True,
+            tags={ 
+                'AquaInsight': 'InfluxDB',
+                'Name': INFLUX_DB_INSTANCE_NAME
+            }
         )
         
         print(f"+ Creating InfluxDB instance: {INFLUX_DB_INSTANCE_NAME}")
         print("! Instance creation initiated. This may take up to 20 minutes...")
         
-        return response['dbInstance']
+        return response.get('dbInstance', response)
         
     except Exception as e:
         print(f":: Error creating InfluxDB instance: {e}")
         raise
 
 def get_influxdb_endpoint():
-    """get the influxDB instance endpoint"""
-
+    """Get the InfluxDB instance endpoint"""
     try:
         response = client.get_db_instance(identifier=INFLUX_DB_INSTANCE_NAME)
         instance = response['dbInstance']
         
         if instance['status'] == 'available':
             endpoint = instance['endpoint']
-            print(f"! InfluxDB endpoint: {endpoint}")
-            return endpoint
+            print(f"! InfluxDB endpoint: https://{endpoint}:8086")
+            return f"https://{endpoint}:8086"
         else:
             print(f"! InfluxDB instance status: {instance['status']}")
             return None
@@ -77,3 +83,17 @@ def get_influxdb_endpoint():
     except Exception as e:
         print(f":: Error getting InfluxDB endpoint: {e}")
         raise
+
+def get_influxdb_status():
+    """Get the current status of InfluxDB instance"""
+    try:
+        response = client.get_db_instance(identifier=INFLUX_DB_INSTANCE_NAME)
+        instance = response['dbInstance']
+        return instance['status']
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'ResourceNotFoundFault':
+            return 'not-found'
+        else:
+            print(f":: Error getting InfluxDB status: {e}")
+            return None
+

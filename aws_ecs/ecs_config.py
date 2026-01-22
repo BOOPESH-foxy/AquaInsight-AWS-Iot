@@ -52,7 +52,7 @@ def create_cluster():
 
         print(f"! Creating ECS cluster '{CLUSTER_NAME}'...")
         response = ecs.create_cluster(
-            clusterName=CLUSTER_NAME
+            clusterName=CLUSTER_NAME,
             tags=[
                     {'key': 'AquaInsight', 'value': 'ECS'},
                     {'key': 'Name', 'value': CLUSTER_NAME}
