@@ -18,8 +18,8 @@ def sqs_client():
 def iam_client():
     return boto3.client('iam',region_name=REGION)
 
-def timestream_client():
-    return boto3.client('timestream-write',region_name=REGION)
+def timestream_influxdb_client():
+    return boto3.client('timestream-influxdb', region_name=REGION)
 
 def ec2_client():
     return boto3.client('ec2',region_name = REGION)

@@ -1,11 +1,11 @@
+import typer
 from aws_iot.aws_iot_resources import *
 from aws_sqs.aws_sqs_resources import *
 from aws_ecs.aws_ecs_resources import *
 from aws_ecs_infra.vpc import setup_ecs_infra
-
+from aws_influxdb.db_config import create_influxdb_instance
 from sensor_data_operations import publish_sensor_data,mqtt_listener_client
 
-import typer
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
@@ -20,7 +20,9 @@ def create_aws_resources():
     ecs_roles = create_task_roles(queue_arn=arn)
 
     vpc_resource_list =  setup_ecs_infra()
-
+    influxdb_instance = create_influxdb_instance(      
+        vpc_resource_list['subnet_ids'], 
+        [vpc_resource_list['security_group_id']]) # converting the string(sg_id) to a list, whereas subnet_ids are already a list
     task_role_arn = ecs_roles[0]
     task_execution_role_arn = ecs_roles[1]
     create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
