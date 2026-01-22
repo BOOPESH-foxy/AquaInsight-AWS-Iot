@@ -44,8 +44,7 @@ def check_influxdb_status():
 
     print("Checking InfluxDB status...")
     status = get_influxdb_status()
-    
-    if status == 'available':
+    if status == 'AVAILABLE':
         endpoint = get_influxdb_endpoint()
         print(f"AquaInsight setup done! InfluxDB ready at: {endpoint}")
     elif status == 'not-found':

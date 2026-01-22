@@ -142,6 +142,25 @@ def create_security_group(vpc_id: str):
         )
         sg_id = response_security_group["GroupId"]
         print("+ Created Security Group id=", sg_id)
+
+       ec2.authorize_security_group_ingress(
+            GroupId=sg_id,
+            IpPermissions=[
+                {
+                    'IpProtocol': 'tcp',
+                    'FromPort': 8086,
+                    'ToPort': 8086,
+                    'IpRanges': [{'CidrIp': '0.0.0.0/0', 'Description': 'InfluxDB HTTPS access'}]
+                },
+                {
+                    'IpProtocol': 'tcp',
+                    'FromPort': 443,
+                    'ToPort': 443,
+                    'IpRanges': [{'CidrIp': '0.0.0.0/0', 'Description': 'HTTPS access'}]
+                }
+            ]
+        )
+        
         ec2.authorize_security_group_egress(
             GroupId=sg_id,
             IpPermissions=[
