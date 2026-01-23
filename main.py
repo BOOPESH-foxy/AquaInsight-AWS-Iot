@@ -1,12 +1,13 @@
-import typer
+import os
 import time
+import typer
 from aws_iot.aws_iot_resources import *
 from aws_sqs.aws_sqs_resources import *
 from aws_ecs.aws_ecs_resources import *
 from botocore.exceptions import ClientError
 from aws_ecs_infra.vpc import setup_ecs_infra
-from aws_influxdb.db_config import create_influxdb_instance, get_influxdb_status, get_influxdb_endpoint
 from sensor_data_operations import publish_sensor_data,mqtt_listener_client
+from aws_influxdb.db_config import create_influxdb_instance, get_influxdb_status, get_influxdb_endpoint
 
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")

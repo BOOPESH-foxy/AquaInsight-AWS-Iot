@@ -35,3 +35,6 @@ def ecr_client():
 
 def logs_client():
     return boto3.client("logs")
+
+def sns_client():
+    return boto3.client("sns", region_name=REGION)

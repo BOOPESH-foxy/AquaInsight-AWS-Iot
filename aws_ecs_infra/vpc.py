@@ -143,7 +143,7 @@ def create_security_group(vpc_id: str):
         sg_id = response_security_group["GroupId"]
         print("+ Created Security Group id=", sg_id)
 
-       ec2.authorize_security_group_ingress(
+        ec2.authorize_security_group_ingress(
             GroupId=sg_id,
             IpPermissions=[
                 {
