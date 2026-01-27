@@ -39,6 +39,7 @@ def create_aws_resources():
     create_ecs_infrastructure(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
     print("\n+ Infrastructure created successfully ! \n Wait for influxDB to be available.")
 
+
 @app.command("deploy_ecs")
 def deploy_ecs_only():
     """Deploy ECS service (start containers) when InfluxDB is ready"""
@@ -63,7 +64,7 @@ def deploy_ecs_only():
     
     print("=== Deploying ECS Service ===")
     deploy_ecs_service(vpc_resource_list)
-    
+
     
 @app.command("stop_ecs")
 def stop_ecs_service():

@@ -14,8 +14,7 @@ ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
 TASK_FAMILY      = os.getenv("ECS_TASK_FAMILY")
-QUEUE_URL        = os.getenv(queue_url)
-INFLUX_DB_ENDPOINT= os.getenv(influxdb_endpoint)
+
 
 def ensure_ecr_repository():
     """ensures ecr repository exists else creates one if it doesn't """
@@ -68,18 +67,23 @@ def create_cluster():
     except Exception as e:
         raise e
 
-
-def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, queue_url):
+def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, queue_url, influxdb_endpoint=None):
     """Register (or re-register) a Fargate task definition for the worker. Returns the task definition ARN."""
     
     try:
         if not task_role_arn or not task_execution_role_arn:
-            raise RuntimeError("ECS_TASK_ROLE_ARN and ECS_EXEC_ROLE_ARN must be set in .env")
+            raise RuntimeError("ECS_TASK_ROLE_ARN and ECS_EXEC_ROLE_ARN must be set")
 
         if not queue_url:
-            raise RuntimeError("SQS_QUEUE_URL must be set in .env")
+            raise RuntimeError("SQS_QUEUE_URL must be set")
 
+        influx_url = influxdb_endpoint if influxdb_endpoint else "https://placeholder:8086"
+        
         print(f"! Registering task definition family '{TASK_FAMILY}' with image {image_uri}")
+        if influxdb_endpoint:
+            print(f"! Using InfluxDB endpoint: {influxdb_endpoint}")
+        else:
+            print(f"! Using placeholder InfluxDB endpoint (will update during deployment)")
 
         response = ecs.register_task_definition(
             family=TASK_FAMILY,
@@ -94,7 +98,7 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                     "name": "aqua-container",
                     "image": image_uri,
                     "essential": True,
-                    "stopTimeout":30,
+                    "stopTimeout": 30,
                     "healthCheck": {
                         "command": ["CMD-SHELL", "python -c 'import boto3; print(\"healthy\")'"],
                         "interval": 30,
@@ -102,13 +106,13 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                         "retries": 3,
                         "startPeriod": 60
                     },                    
-                "environment": [
-                    {"name": "AWS_REGION", "value": AWS_REGION},
-                    {"name": "SQS_QUEUE_URL", "value": queue_url},
-                    {"name": "INFLUX_URL", "value": influxdb_endpoint},
-                    {"name": "INFLUX_ORG", "value": "AquaInsight"},
-                    {"name": "INFLUX_BUCKET", "value": "water-quality-data"},
-                ],
+                    "environment": [
+                        {"name": "AWS_REGION", "value": AWS_REGION},
+                        {"name": "SQS_QUEUE_URL", "value": queue_url},
+                        {"name": "INFLUX_URL", "value": influx_url}, 
+                        {"name": "INFLUX_ORG", "value": "AquaInsight"},
+                        {"name": "INFLUX_BUCKET", "value": "water-quality-data"},
+                    ],
                     "logConfiguration": {
                         "logDriver": "awslogs",
                         "options": {
@@ -131,40 +135,3 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
 
     except Exception as e:
         raise e
-
-def create_ecs_service(task_definition_arn, subnet_ids, sg_id):
-    """Ensure an ECS service exists and is using the latest task definition."""
-
-    response = ecs.describe_services(cluster=CLUSTER_NAME, services=[SERVICE_NAME])
-    services = response.get("services", [])
-
-    network_conf = {
-        "awsvpcConfiguration": {
-            "subnets": subnet_ids,           
-            "securityGroups": [sg_id],
-            "assignPublicIp": "ENABLED",   
-        }
-    }
-
-    if services and services[0]["status"] != "INACTIVE":
-        print(f"! ECS service '{SERVICE_NAME}' already exists, updating...")
-        ecs.update_service(
-            cluster=CLUSTER_NAME,
-            service=SERVICE_NAME,
-            taskDefinition=task_definition_arn,
-            desiredCount=1,
-            networkConfiguration=network_conf,
-        )
-        print("+ Service updated.")
-        return
-
-    print(f"! Creating ECS service '{SERVICE_NAME}'...")
-    ecs.create_service(
-        cluster=CLUSTER_NAME,
-        serviceName=SERVICE_NAME,
-        taskDefinition=task_definition_arn,
-        desiredCount=1,
-        launchType="FARGATE",
-        networkConfiguration=network_conf,
-    )
-    print("+ Service created.")

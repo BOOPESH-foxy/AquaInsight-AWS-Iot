@@ -321,17 +321,37 @@ def setup_ecs_infra():
         "availability_zones": [az["ZoneName"] for az in azs],
     }
 
+
+
 def get_vpc_resources():
-    """Get existing VPC resources"""
+    """Get existing VPC resources (lightweight - no creation logs)"""
+    
     vpc_id = check_vpc_existence()
     if not vpc_id:
         raise RuntimeError("VPC not found. Run create_infrastructure first.")
     
-    subnet_ids = get_subnet_ids(vpc_id)
-    security_group_id = get_security_group_id(vpc_id)
+    sg_id = check_security_group_existence(vpc_id)
+    if not sg_id:
+        raise RuntimeError("Security group not found. Run create_infrastructure first.")
+    
+    response = ec2.describe_subnets(
+        Filters=[
+            {"Name": "vpc-id", "Values": [vpc_id]},
+            {"Name": "tag:AquaInsight", "Values": ["ECS"]},
+        ]
+    )
+    subnets = response.get("Subnets", [])
+    if not subnets:
+        raise RuntimeError("No subnets found. Run create_infrastructure first.")
+    
+    subnet_ids = [s["SubnetId"] for s in subnets]
+    
+    print(f"! Using existing VPC: {vpc_id}")
+    print(f"! Using existing subnets: {len(subnet_ids)} subnets")
+    print(f"! Using existing security group: {sg_id}")
     
     return {
         'vpc_id': vpc_id,
         'subnet_ids': subnet_ids,
-        'security_group_id': security_group_id
+        'security_group_id': sg_id
     }
