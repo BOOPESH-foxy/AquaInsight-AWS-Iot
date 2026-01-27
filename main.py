@@ -38,6 +38,17 @@ def create_aws_resources():
     task_execution_role_arn = ecs_roles[1]
     create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
 
+@app.command("deploy_ecs")
+def deploy_ecs_only():
+    """Deploy/update ECS service with latest image"""
+    
+@app.command("stop_ecs")
+def stop_ecs_service():
+    """Stop ECS service (set desired count to 0)"""
+    
+   
+
+
 
 @app.command("check_influxdb")
 def check_influxdb_status():

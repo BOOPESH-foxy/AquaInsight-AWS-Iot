@@ -14,6 +14,8 @@ ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
 TASK_FAMILY      = os.getenv("ECS_TASK_FAMILY")
+# QUEUE_URL        = os.getenv(queue_url)
+# influxdb_endpoint= os.getenv(influxdb_endpoint)
 
 def ensure_ecr_repository():
     """ensures ecr repository exists else creates one if it doesn't """
@@ -100,10 +102,13 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                         "retries": 3,
                         "startPeriod": 60
                     },                    
-                    "environment": [
-                        {"name": "AWS_REGION", "value": AWS_REGION},
-                        {"name": "SQS_QUEUE_URL", "value": queue_url},
-                    ],
+                "environment": [
+                    {"name": "AWS_REGION", "value": AWS_REGION},
+                    {"name": "SQS_QUEUE_URL", "value": queue_url},
+                    {"name": "INFLUX_URL", "value": influxdb_endpoint},
+                    {"name": "INFLUX_ORG", "value": "AquaInsight"},
+                    {"name": "INFLUX_BUCKET", "value": "water-quality-data"},
+                ],
                     "logConfiguration": {
                         "logDriver": "awslogs",
                         "options": {
