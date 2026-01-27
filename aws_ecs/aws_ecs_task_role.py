@@ -66,6 +66,8 @@ def create_ecs_task_role(queue_arn: str, role_name: str = "ecs_task_role") -> st
                     "Action": [
                         "timestream:WriteRecords",
                         "timestream:DescribeEndpoints",
+                        "timestream-influxdb:GetDbInstance",
+                        "timestream-influxdb:ListDbInstances"
                     ],
                     "Resource": "*",
                 },
