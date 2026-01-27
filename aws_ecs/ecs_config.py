@@ -14,8 +14,8 @@ ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
 CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
 SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
 TASK_FAMILY      = os.getenv("ECS_TASK_FAMILY")
-# QUEUE_URL        = os.getenv(queue_url)
-# influxdb_endpoint= os.getenv(influxdb_endpoint)
+QUEUE_URL        = os.getenv(queue_url)
+INFLUX_DB_ENDPOINT= os.getenv(influxdb_endpoint)
 
 def ensure_ecr_repository():
     """ensures ecr repository exists else creates one if it doesn't """

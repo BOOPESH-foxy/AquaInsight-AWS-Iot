@@ -36,17 +36,70 @@ def create_aws_resources():
 
     task_role_arn = ecs_roles[0]
     task_execution_role_arn = ecs_roles[1]
-    create_ecs_resources(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
+    create_ecs_infrastructure(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
+    print("\n+ Infrastructure created successfully ! \n Wait for influxDB to be available.")
 
 @app.command("deploy_ecs")
 def deploy_ecs_only():
-    """Deploy/update ECS service with latest image"""
+    """Deploy ECS service (start containers) when InfluxDB is ready"""
+    
+    print("=== Checking Prerequisites ===")
+    
+    status = get_influxdb_status()
+    if status != 'AVAILABLE':
+        print(f"InfluxDB not ready (status: {status})")
+        print("Wait for InfluxDB to be AVAILABLE before deploying containers")
+        return
+    
+    print("InfluxDB is ready")
+    
+    from aws_ecs_infra.vpc import get_vpc_resources
+    try:
+        vpc_resource_list = get_vpc_resources()
+    except RuntimeError as e:
+        print(f"{e}")
+        print("Run: python main.py create_infrastructure first")
+        return
+    
+    print("=== Deploying ECS Service ===")
+    deploy_ecs_service(vpc_resource_list)
+    
     
 @app.command("stop_ecs")
 def stop_ecs_service():
     """Stop ECS service (set desired count to 0)"""
+    from aws_ecs.ecs_config import ecs, CLUSTER_NAME, SERVICE_NAME
     
-   
+    try:
+        ecs.update_service(
+            cluster=CLUSTER_NAME,
+            service=SERVICE_NAME,
+            desiredCount=0
+        )
+        print("- ECS service stopped (desired count = 0)")
+    except Exception as e:
+        print(f"! Error stopping service: {e}")
+
+
+@app.command("start_ecs") 
+def start_ecs_service():
+    """Start ECS service (set desired count to 1)"""
+    from aws_ecs.ecs_config import ecs, CLUSTER_NAME, SERVICE_NAME
+    
+    status = get_influxdb_status()
+    if status != 'AVAILABLE':
+        print(f"InfluxDB not ready (status: {status})")
+        return
+    
+    try:
+        ecs.update_service(
+            cluster=CLUSTER_NAME,
+            service=SERVICE_NAME,
+            desiredCount=1
+        )
+        print("+ ECS service started (desired count = 1)")
+    except Exception as e:
+        print(f"! Error starting service: {e}")
 
 
 
