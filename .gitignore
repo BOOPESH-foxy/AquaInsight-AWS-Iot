@@ -5,6 +5,4 @@ __pycache__/
 sensor_data_operations/mqtt_listener_client.py
 clean_resources/
 monitor_deployment.py
-DEPLOYMENT_GUIDE.md
-DEPLOYMENT_STATUS.md
 aws_sns
