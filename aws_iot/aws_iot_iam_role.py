@@ -23,7 +23,7 @@ def create_iot_to_sqs_role(queue_arn, role_name = "iot_to_sqs_role"):
 
     role_arn = check_role_existence(role_name)
     if(role_arn):
-        print("! Role exists")
+        print("! IoT-to-SQS role already exists")
         return role_arn
     
     else:
@@ -70,6 +70,7 @@ def create_iot_to_sqs_role(queue_arn, role_name = "iot_to_sqs_role"):
 
             time.sleep(6)
             role_existence = check_role_existence(role_name)
+            print("+ Created IoT-to-SQS IAM role")
             return role_arn
 
         except Exception as e:

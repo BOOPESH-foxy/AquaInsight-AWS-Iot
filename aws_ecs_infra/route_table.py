@@ -29,7 +29,7 @@ def check_route_table_existence(vpc_id: str):
 
 def create_route_table(vpc_id: str):
     try:
-        print(f"Creating route table for {VPC_NAME}")
+        print(f"! Creating route table for {VPC_NAME}...")
         response_route_table_creation = ec2.create_route_table(
             TagSpecifications=[
                 {
@@ -49,7 +49,7 @@ def create_route_table(vpc_id: str):
             VpcId=vpc_id
         )
         route_table_id = response_route_table_creation['RouteTable']['RouteTableId']
-        print(f"+ Created route-table id={route_table_id} for {VPC_NAME}")
+        print(f"+ Created route table: {route_table_id}")
         return route_table_id
     
     except botocore.Exception as e:
@@ -62,8 +62,9 @@ def modify_route_table(vpc_id: str,subnet_id: str,igw_id: str):
 
     existing_routes = [r['DestinationCidrBlock'] for r in ec2.describe_route_tables(RouteTableIds=[route_table_id])['RouteTables'][0]['Routes']]
     if '0.0.0.0/0' not in existing_routes:
-        print("! Creating route to IGW")
+        print("! Creating route to Internet Gateway...")
         result_creating_route = ec2.create_route(RouteTableId=route_table_id, DestinationCidrBlock='0.0.0.0/0', GatewayId=igw_id)
+        print("+ Added route to Internet Gateway")
     else:
         print("! Route to IGW already exists")
 
@@ -71,8 +72,9 @@ def modify_route_table(vpc_id: str,subnet_id: str,igw_id: str):
     associated_subnets = [a.get('SubnetId') for a in associations if a.get('SubnetId')]
     
     if subnet_id not in associated_subnets:
-        print(f"! Associating route-table to Subnet {subnet_id}")
+        print(f"! Associating route table to subnet {subnet_id}...")
         result_associating_route = ec2.associate_route_table(RouteTableId=route_table_id, SubnetId=subnet_id)
+        print("+ Associated route table to subnet")
     else:
         print(f"! Subnet {subnet_id} already associated with route table")
     

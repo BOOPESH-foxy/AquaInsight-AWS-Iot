@@ -22,7 +22,7 @@ def create_ecs_task_role(queue_arn: str, role_name: str = "ecs_task_role") -> st
 
     role_arn = check_role_existence(role_name)
     if role_arn:
-        print("! Role exists")
+        print("! ECS task role already exists")
         return role_arn
 
     try:
@@ -88,7 +88,7 @@ def create_ecs_task_role(queue_arn: str, role_name: str = "ecs_task_role") -> st
                 f"Role {role_name} was created but could not be retrieved."
             )
         else:
-            print("+ Created Role ")
+            print("+ Created ECS task role")
             return role_existence
 
     except Exception as e:

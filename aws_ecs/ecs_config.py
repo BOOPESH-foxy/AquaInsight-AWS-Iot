@@ -61,7 +61,7 @@ def create_cluster():
             )
 
         cluster_arn = response["cluster"]["clusterArn"]
-        print(f"+ Created cluster {CLUSTER_NAME}")
+        print(f"+ Created ECS cluster: {CLUSTER_NAME}")
         return cluster_arn
     
     except Exception as e:
@@ -77,11 +77,13 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
         if not queue_url:
             raise RuntimeError("SQS_QUEUE_URL must be set")
 
-        influx_url = influxdb_endpoint if influxdb_endpoint else "https://placeholder:8086"
+        # Use existing InfluxDB URL from .env if available, otherwise use the endpoint parameter
+        influx_url = os.getenv("INFLUX_URL") or influxdb_endpoint or "https://placeholder:8086"
+        influx_token = os.getenv("INFLUX_TOKEN", "")
         
         print(f"! Registering task definition family '{TASK_FAMILY}' with image {image_uri}")
-        if influxdb_endpoint:
-            print(f"! Using InfluxDB endpoint: {influxdb_endpoint}")
+        if influx_url != "https://placeholder:8086":
+            print(f"! Using InfluxDB endpoint: {influx_url}")
         else:
             print(f"! Using placeholder InfluxDB endpoint (will update during deployment)")
 
@@ -108,10 +110,16 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
                     },                    
                     "environment": [
                         {"name": "AWS_REGION", "value": AWS_REGION},
+                        {"name": "ENVIRONMENT", "value": "dev"},
                         {"name": "SQS_QUEUE_URL", "value": queue_url},
+                        {"name": "QUEUE_NAME", "value": "AquaInsight-queue"},
                         {"name": "INFLUX_URL", "value": influx_url}, 
+                        {"name": "INFLUX_TOKEN", "value": influx_token},
                         {"name": "INFLUX_ORG", "value": "AquaInsight"},
                         {"name": "INFLUX_BUCKET", "value": "water-quality-data"},
+                        {"name": "SNS_TOPIC_GENERAL", "value": f"arn:aws:sns:{AWS_REGION}:{ACCOUNT_ID}:aquaInsight-alerts-general"},
+                        {"name": "SNS_TOPIC_KARUR", "value": f"arn:aws:sns:{AWS_REGION}:{ACCOUNT_ID}:aquaInsight-alerts-karur"},
+                        {"name": "SNS_TOPIC_TIRUPPUR", "value": f"arn:aws:sns:{AWS_REGION}:{ACCOUNT_ID}:aquaInsight-alerts-karur"},
                     ],
                     "logConfiguration": {
                         "logDriver": "awslogs",
@@ -135,3 +143,49 @@ def register_task_definition(image_uri, task_role_arn, task_execution_role_arn, 
 
     except Exception as e:
         raise e
+
+
+def create_ecs_service(task_definition_arn, subnet_ids, security_group_id):
+    """Create ECS service with the given task definition and network configuration"""
+    
+    try:
+        try:
+            response = ecs.describe_services(
+                cluster=CLUSTER_NAME,
+                services=[SERVICE_NAME]
+            )
+            services = response.get('services', [])
+            if services and services[0]['status'] != 'INACTIVE':
+                print(f"! ECS service '{SERVICE_NAME}' already exists")
+                return services[0]['serviceArn']
+        except Exception:
+            pass 
+        
+        print(f"! Creating ECS service '{SERVICE_NAME}'...")
+        
+        response = ecs.create_service(
+            cluster=CLUSTER_NAME,
+            serviceName=SERVICE_NAME,
+            taskDefinition=task_definition_arn,
+            desiredCount=1,
+            launchType='FARGATE',
+            networkConfiguration={
+                'awsvpcConfiguration': {
+                    'subnets': subnet_ids,
+                    'securityGroups': [security_group_id],
+                    'assignPublicIp': 'ENABLED'
+                }
+            },
+            tags=[
+                {'key': 'AquaInsight', 'value': 'ECS'},
+                {'key': 'Name', 'value': SERVICE_NAME}
+            ]
+        )
+        
+        service_arn = response['service']['serviceArn']
+        print(f"+ Created ECS service: {SERVICE_NAME}")
+        return service_arn
+        
+    except Exception as e:
+        print(f":: Error creating ECS service: {e}")
+        raise

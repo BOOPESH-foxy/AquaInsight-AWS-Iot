@@ -37,7 +37,7 @@ def create_iot_rule(url, role_arn):
                     }]
                 }
             )
-            print("+ IoT rule created successfully")
+            print("+ Created IoT rule successfully")
             return response_rule_creation
             
         except ClientError as e:

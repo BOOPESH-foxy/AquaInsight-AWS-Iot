@@ -21,7 +21,7 @@ def create_influxdb_instance(subnet_ids, security_group_ids):
     
     try:
         response = influxdb_client.get_db_instance(identifier=INFLUX_DB_INSTANCE_NAME)
-        print(f"! influxdb_InfluxDB instance '{INFLUX_DB_INSTANCE_NAME}' already exists")
+        print(f"! InfluxDB instance '{INFLUX_DB_INSTANCE_NAME}' already exists")
         instance = response['dbInstance']
         
         if instance['status'] == 'available':
@@ -57,8 +57,8 @@ def create_influxdb_instance(subnet_ids, security_group_ids):
             }
         )
         
-        print(f"+ Creating InfluxDB instance: {INFLUX_DB_INSTANCE_NAME}")
-        print("! Instance creation initiated. This may take up to 20 minutes...")
+        print(f"+ Created InfluxDB instance: {INFLUX_DB_INSTANCE_NAME}")
+        print("! Instance creation initiated (takes ~20 minutes)")
         
         return response.get('dbInstance', response)
         

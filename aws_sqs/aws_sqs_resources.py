@@ -12,6 +12,7 @@ def create_queue():
             }
         )
         url =  response_queue_creation['QueueUrl']
+        print("+ Created SQS queue: AquaInsight-queue")
         return url
     
     except Exception as e:
@@ -28,6 +29,7 @@ def get_queue_arn(url):
             'QueueArn'
             ])
         arn = response_queue_attributes['Attributes']['QueueArn']
+        print("! Retrieved SQS queue ARN")
         return arn
 
     except Exception as e:

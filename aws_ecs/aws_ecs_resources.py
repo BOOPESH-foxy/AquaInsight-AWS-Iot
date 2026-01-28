@@ -30,9 +30,15 @@ def deploy_ecs_service(vpc_resource_list):
     subnet_ids = vpc_resource_list['subnet_ids']
     sg_id = vpc_resource_list['security_group_id']
     
-    influxdb_endpoint = get_influxdb_endpoint()
-    if not influxdb_endpoint:
-        raise RuntimeError("InfluxDB endpoint not available")
+    existing_influx_url = os.getenv("INFLUX_URL")
+    
+    if existing_influx_url:
+        print(f"Using existing InfluxDB from .env: {existing_influx_url}")
+        influxdb_endpoint = existing_influx_url
+    else:
+        influxdb_endpoint = get_influxdb_endpoint()
+        if not influxdb_endpoint:
+            raise RuntimeError("InfluxDB endpoint not available and no existing URL in .env")
     
     response = ecs.describe_task_definition(taskDefinition=TASK_FAMILY)
     current_task = response['taskDefinition']
@@ -48,7 +54,7 @@ def deploy_ecs_service(vpc_resource_list):
     
     image_uri = get_image_uri()
     task_definition_arn = register_task_definition(
-        image_uri, task_role_arn, execution_role_arn, queue_url, influxdb_endpoint  # Pass endpoint!
+        image_uri, task_role_arn, execution_role_arn, queue_url, influxdb_endpoint
     )
     
     create_ecs_service(task_definition_arn, subnet_ids, sg_id)

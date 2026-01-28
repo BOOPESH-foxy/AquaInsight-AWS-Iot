@@ -39,7 +39,7 @@ aws ecs delete-cluster --cluster AquaInsight-Cluster --region $REGION 2>/dev/nul
 
 # 3. ECR cleanup
 echo "Deleting ECR repositories..."
-aws ecr delete-repository --repository-name aquainsight-repo --force --region $REGION 2>/dev/null || echo "ECR repo not found"
+aws ecr delete-repository --repository-name aqua-container --force --region $REGION 2>/dev/null || echo "ECR repo not found"
 
 # 4. IoT cleanup
 echo "Deleting IoT resources..."

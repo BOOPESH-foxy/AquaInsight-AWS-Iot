@@ -98,7 +98,7 @@ def create_vpc():
         return vpc_id
 
     try:
-        print("! Creating VPC")
+        print("! Creating VPC...")
         response_vpc = ec2.create_vpc(
             CidrBlock=CIDR_BLOCK,
             TagSpecifications=[
@@ -112,7 +112,7 @@ def create_vpc():
             ],
         )
         vpc_id = response_vpc["Vpc"]["VpcId"]
-        print(f"+ Created VPC id={vpc_id}")
+        print(f"+ Created VPC: {vpc_id}")
         return vpc_id
 
     except ClientError as e:
@@ -126,7 +126,7 @@ def create_security_group(vpc_id: str):
         return security_group_id
 
     try:
-        print("! Creating Security Group")
+        print("! Creating Security Group...")
         response_security_group = ec2.create_security_group(
             Description="AquaInsight ECS VPC",
             GroupName=SECURITY_GROUP_NAME,
@@ -141,7 +141,7 @@ def create_security_group(vpc_id: str):
             ],
         )
         sg_id = response_security_group["GroupId"]
-        print("+ Created Security Group id=", sg_id)
+        print("+ Created Security Group:", sg_id)
 
         ec2.authorize_security_group_ingress(
             GroupId=sg_id,
@@ -178,6 +178,7 @@ def create_security_group(vpc_id: str):
                 }
             ]
         )
+        print("! Configured security group rules")
 
         return sg_id
 
@@ -192,7 +193,7 @@ def create_internet_gateway(vpc_id: str):
         return igw_id
 
     try:
-        print("! Creating Internet Gateway")
+        print("! Creating Internet Gateway...")
         response_igw = ec2.create_internet_gateway(
             TagSpecifications=[
                 {
@@ -204,13 +205,14 @@ def create_internet_gateway(vpc_id: str):
             ]
         )
         igw_id = response_igw["InternetGateway"]["InternetGatewayId"]
-        print(f"+ Created Internet Gateway id={igw_id} for {VPC_NAME}")
-        print("! Attaching the Internet Gateway to the VPC")
+        print(f"+ Created Internet Gateway: {igw_id}")
+        
+        print("! Attaching Internet Gateway to VPC...")
         ec2.attach_internet_gateway(
             InternetGatewayId=igw_id,
             VpcId=vpc_id,
         )
-        print("+ Attached the Internet Gateway successfully!")
+        print("+ Attached Internet Gateway successfully")
         return igw_id
 
     except ClientError as e:
@@ -288,7 +290,7 @@ def create_subnets_for_vpc(vpc_id: str, azs: list[dict]):
                 MapPublicIpOnLaunch={"Value": True},
                 SubnetId=subnet_id,
             )
-            print(f"+ Created subnet {subnet_id} for {VPC_NAME} in AZ {az_name}")
+            print(f"+ Created subnet {subnet_id} in AZ {az_name}")
             subnet_ids.append(subnet_id)
 
         except ClientError as e:

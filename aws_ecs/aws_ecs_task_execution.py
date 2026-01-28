@@ -25,7 +25,7 @@ def create_ecs_task_execution_role(role_name: str = "ecsTaskExecutionRole") -> s
 
     role_arn = check_execution_role_existence(role_name)
     if role_arn:
-        print(f"! Execution role {role_name} already exists")
+        print(f"! ECS execution role already exists")
         return role_arn
 
     trust_policy = {
@@ -52,7 +52,7 @@ def create_ecs_task_execution_role(role_name: str = "ecsTaskExecutionRole") -> s
             PolicyArn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
         )
 
-        print(f"+ Created ECS task execution role: {role_name}")
+        print(f"+ Created ECS task execution role")
         return role_arn
 
     except Exception as e:

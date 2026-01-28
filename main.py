@@ -3,6 +3,7 @@ import time
 import typer
 from aws_iot.aws_iot_resources import *
 from aws_sqs.aws_sqs_resources import *
+from aws_sns.aws_sns_resources import *
 from aws_ecs.aws_ecs_resources import *
 from botocore.exceptions import ClientError
 from aws_ecs_infra.vpc import setup_ecs_infra
@@ -15,20 +16,20 @@ app = typer.Typer(help="AWS IoT thing data processing - sensor")
 @app.command("create_infrastructure")
 def create_aws_resources():
     """create resources on the specified region"""
-
+    
     url = create_queue()
     arn = get_queue_arn(url)
+    sns_topics = create_district_topics()
     role_arn = create_iot_to_sqs_role(queue_arn=arn)
     
     print("! Waiting for IAM role to propagate...")
     time.sleep(15)
     
     response_rule_creation = create_iot_rule(url,role_arn)
-
     ecs_roles = create_task_roles(queue_arn=arn)
+
     vpc_resource_list = setup_ecs_infra()
-    
-    print("\n=== Creating InfluxDB Instance ===")
+
     influxdb_instance = create_influxdb_instance(
         vpc_resource_list['subnet_ids'], 
         [vpc_resource_list['security_group_id']]
@@ -37,7 +38,7 @@ def create_aws_resources():
     task_role_arn = ecs_roles[0]
     task_execution_role_arn = ecs_roles[1]
     create_ecs_infrastructure(vpc_resource_list,task_role_arn,task_execution_role_arn,url)
-    print("\n+ Infrastructure created successfully ! \n Wait for influxDB to be available.")
+ 
 
 
 @app.command("deploy_ecs")
@@ -101,7 +102,6 @@ def start_ecs_service():
         print("+ ECS service started (desired count = 1)")
     except Exception as e:
         print(f"! Error starting service: {e}")
-
 
 
 @app.command("check_influxdb")
