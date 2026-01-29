@@ -61,7 +61,7 @@ def create_cluster():
             )
 
         cluster_arn = response["cluster"]["clusterArn"]
-        print(f"+ Created ECS cluster: {CLUSTER_NAME}")
+        print(f"+ Created cluster {CLUSTER_NAME}")
         return cluster_arn
     
     except Exception as e:

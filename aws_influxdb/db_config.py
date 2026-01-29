@@ -36,6 +36,7 @@ def create_influxdb_instance(subnet_ids, security_group_ids):
         if e.response['Error']['Code'] != 'ResourceNotFoundException':  # Fixed!
             raise
     
+    print(f"=== Creating InfluxDB Instance ===")
     print(f"! Creating InfluxDB instance '{INFLUX_DB_INSTANCE_NAME}'...")
     
     try:
