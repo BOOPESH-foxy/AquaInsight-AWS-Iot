@@ -13,6 +13,13 @@ from aws_influxdb.db_config import create_influxdb_instance, get_influxdb_status
 
 app = typer.Typer(help="AWS IoT thing data processing - sensor")
 
+@app.command("populate_ssm")
+def populate_ssm_parameters():
+    """Populate SSM Parameter Store with values from .env file"""
+    from aws_ssm.ssm_config import populate_ssm_from_env
+    populate_ssm_from_env()
+
+
 @app.command("create_infrastructure")
 def create_aws_resources():
     """create resources on the specified region"""

@@ -1,5 +1,28 @@
 # AquaInsight Deployment Guide
 
+## Configuration Management
+
+The application uses AWS Systems Manager (SSM) Parameter Store for centralized configuration management in production environments.
+
+### Initial Configuration Setup
+
+#### 1. Environment Configuration
+```bash
+# Copy example configuration
+cp .env.example .env
+
+# Edit .env with your AWS account details
+# Required: REGION, ACCOUNT_ID, and other infrastructure settings
+```
+
+#### 2. Populate SSM Parameter Store (One-time)
+```bash
+# Migrate configuration from .env to AWS SSM Parameter Store
+python main.py populate_ssm
+```
+
+This creates parameters under `/aquainsight/*` hierarchy in AWS SSM Parameter Store.
+
 ## Quick Start with Your Existing InfluxDB
 
 Since you already have a working InfluxDB instance with token authentication, use these commands:
@@ -46,6 +69,9 @@ python main.py deploy_ecs
 ## Management Commands
 
 ```bash
+# Configuration Management
+python main.py populate_ssm        # Migrate .env to SSM Parameter Store
+
 # ECS Service Management
 python main.py start_ecs           # Start containers
 python main.py stop_ecs            # Stop containers
@@ -62,6 +88,7 @@ python main.py iot_listener        # Listen for commands
 
 ## What's Configured
 
+- **Configuration Management**: AWS SSM Parameter Store with .env fallback
 - **VPC**: Custom VPC with public subnets
 - **Security Groups**: Proper ingress/egress rules
 - **IAM Roles**: ECS task and execution roles with minimal permissions

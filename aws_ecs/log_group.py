@@ -1,11 +1,9 @@
 from botocore.exceptions import ClientError
 from aws_clients import logs_client
 import os
-from dotenv import load_dotenv
+from config_manager import get_config
 
-load_dotenv()
-
-LOG_GROUP = os.getenv("LOG_GROUP")
+LOG_GROUP = get_config("LOG_GROUP", "/aquainsight/ecs/log-group")
 
 logs = logs_client()
 

@@ -1,14 +1,12 @@
 import os
-from dotenv import load_dotenv
 from botocore.exceptions import ClientError
 from aws_clients import sns_client
-
-load_dotenv()
+from config_manager import get_config
 
 sns = sns_client()
 
-AWS_REGION = os.getenv("REGION")
-ACCOUNT_ID = os.getenv("ACCOUNT_ID")
+AWS_REGION = get_config("REGION", "/aquainsight/infrastructure/region")
+ACCOUNT_ID = get_config("ACCOUNT_ID", "/aquainsight/infrastructure/account-id")
 
 def create_sns_topic(topic_name, display_name=None):
     """Create SNS topic for alerts"""

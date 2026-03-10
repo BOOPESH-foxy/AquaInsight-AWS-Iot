@@ -1,22 +1,22 @@
 import os
 from botocore.exceptions import ClientError
-from dotenv import load_dotenv
+from config_manager import get_config
 
 from aws_clients import ec2_client
 from aws_ecs_infra.route_table import modify_route_table
 
-load_dotenv()
 ec2 = ec2_client()
 
-SECURITY_GROUP_NAME = os.getenv("SECURITY_GROUP_NAME")
-VPC_NAME = os.getenv("VPC_NAME")
-CIDR_BLOCK = os.getenv("CIDR_BLOCK")
-REGION = os.getenv("REGION", "ap-south-1")
+SECURITY_GROUP_NAME = get_config("SECURITY_GROUP_NAME", "/aquainsight/vpc/security-group-name")
+VPC_NAME = get_config("VPC_NAME", "/aquainsight/vpc/name")
+CIDR_BLOCK = get_config("CIDR_BLOCK", "/aquainsight/vpc/cidr-block")
+REGION = get_config("REGION", "/aquainsight/infrastructure/region", "ap-south-1")
 
 SUBNET_CIDR_BLOCKS = [
     cidr.strip()
-    for cidr in os.getenv(
+    for cidr in get_config(
         "SUBNET_CIDR_BLOCKS",
+        "/aquainsight/vpc/subnet-cidr-blocks",
         ""
     ).split(",")
     if cidr.strip()

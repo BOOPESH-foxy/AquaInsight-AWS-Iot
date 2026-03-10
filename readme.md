@@ -44,6 +44,25 @@ The repository contains the following files:
 To install the necessary Python libraries, run the following command:
 
 ```bash
-pip install boto3
+pip install boto3 python-dotenv typer
+```
+
+### Configuration Management
+
+The application uses AWS Systems Manager (SSM) Parameter Store for production configuration management with `.env` file fallback for local development.
+
+#### Initial Setup (One-time)
+```bash
+# 1. Configure your .env file with required values
+cp .env.example .env
+# Edit .env with your AWS account details
+
+# 2. Populate SSM Parameter Store
+python main.py populate_ssm
+```
+
+#### Configuration Sources
+- **Production**: AWS SSM Parameter Store (`/aquainsight/*` parameters)
+- **Development**: Local `.env` file (automatic fallback)
 
 

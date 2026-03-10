@@ -1,19 +1,18 @@
 import os
-from dotenv import load_dotenv
 from aws_clients import ecs_client,ecr_client
+from config_manager import get_config
 
-load_dotenv()
 ecr = ecr_client()
 ecs = ecs_client()
 image_tag = 'latest'
 
-AWS_REGION       = os.getenv("REGION")
-ACCOUNT_ID       = os.getenv("ACCOUNT_ID")
-LOG_GROUP        = os.getenv("LOG_GROUP")
-ECR_REPOSITORY   = os.getenv("ECR_REPOSITORY")
-CLUSTER_NAME     = os.getenv("ECS_CLUSTER_NAME")
-SERVICE_NAME     = os.getenv("ECS_SERVICE_NAME")
-TASK_FAMILY      = os.getenv("ECS_TASK_FAMILY")
+AWS_REGION       = get_config("REGION", "/aquainsight/infrastructure/region")
+ACCOUNT_ID       = get_config("ACCOUNT_ID", "/aquainsight/infrastructure/account-id")
+LOG_GROUP        = get_config("LOG_GROUP", "/aquainsight/ecs/log-group")
+ECR_REPOSITORY   = get_config("ECR_REPOSITORY", "/aquainsight/ecs/ecr-repository")
+CLUSTER_NAME     = get_config("ECS_CLUSTER_NAME", "/aquainsight/ecs/cluster-name")
+SERVICE_NAME     = get_config("ECS_SERVICE_NAME", "/aquainsight/ecs/service-name")
+TASK_FAMILY      = get_config("ECS_TASK_FAMILY", "/aquainsight/ecs/task-family")
 
 
 def ensure_ecr_repository():

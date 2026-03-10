@@ -1,12 +1,11 @@
 import os
 import botocore
-from dotenv import load_dotenv
 from aws_clients import ec2_client
+from config_manager import get_config
 
-load_dotenv()
 ec2 = ec2_client()
 
-VPC_NAME = os.getenv('VPC_NAME')
+VPC_NAME = get_config('VPC_NAME', '/aquainsight/vpc/name')
 
 def check_route_table_existence(vpc_id: str):
     # looks for custom route table with AquaInsight tag

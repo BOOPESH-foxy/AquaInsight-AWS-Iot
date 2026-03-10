@@ -9,6 +9,9 @@ REGION = os.getenv('REGION')
 def iot_data_client():
     return boto3.client('iot-data',region_name = REGION)
 
+def ssm_client():
+    return boto3.client('ssm',region_name=REGION)
+
 def iot_client():
     return boto3.client('iot',region_name = REGION)
 

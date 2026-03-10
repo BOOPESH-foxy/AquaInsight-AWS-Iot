@@ -1,18 +1,16 @@
 import os
-from dotenv import load_dotenv
 from botocore.exceptions import ClientError
 from aws_clients import timestream_influxdb_client
+from config_manager import get_config
 
-load_dotenv()
-
-INFLUX_DB_INSTANCE_NAME = os.getenv("INFLUX_DB_INSTANCE_NAME")
-INFLUX_DB_INSTANCE_TYPE = os.getenv("INFLUX_DB_INSTANCE_TYPE")
-INFLUX_STORAGE_TYPE = os.getenv("INFLUX_STORAGE_TYPE")
-INFLUX_ALLOCATED_STORAGE = int(os.getenv("INFLUX_ALLOCATED_STORAGE", "400"))
-INFLUX_USERNAME = os.getenv("INFLUX_USERNAME")
-INFLUX_PASSWORD = os.getenv("INFLUX_PASSWORD")
-INFLUX_ORGANIZATION = os.getenv("INFLUX_ORGANIZATION")
-INFLUX_BUCKET = os.getenv("INFLUX_BUCKET")
+INFLUX_DB_INSTANCE_NAME = get_config("INFLUX_DB_INSTANCE_NAME", "/aquainsight/influxdb/instance-name")
+INFLUX_DB_INSTANCE_TYPE = get_config("INFLUX_DB_INSTANCE_TYPE", "/aquainsight/influxdb/instance-type")
+INFLUX_STORAGE_TYPE = get_config("INFLUX_STORAGE_TYPE", "/aquainsight/influxdb/storage-type")
+INFLUX_ALLOCATED_STORAGE = int(get_config("INFLUX_ALLOCATED_STORAGE", "/aquainsight/influxdb/allocated-storage", "400"))
+INFLUX_USERNAME = get_config("INFLUX_USERNAME", "/aquainsight/influxdb/username")
+INFLUX_PASSWORD = get_config("INFLUX_PASSWORD", "/aquainsight/influxdb/password")
+INFLUX_ORGANIZATION = get_config("INFLUX_ORGANIZATION", "/aquainsight/influxdb/organization")
+INFLUX_BUCKET = get_config("INFLUX_BUCKET", "/aquainsight/influxdb/bucket")
 
 influxdb_client = timestream_influxdb_client()
 
