@@ -1,0 +1,201 @@
+{
+	"Name": "My Estimate",
+	"Total Cost": {
+		"monthly": "1428.02",
+		"upfront": "0.00",
+		"12 months": "17136.24"
+	},
+	"Metadata": {
+		"Currency": "USD",
+		"Locale": "en_US",
+		"Created On": "3/20/2026",
+		"Legal Disclaimer": "AWS Pricing Calculator provides only an estimate of your AWS fees and doesn't include any taxes that might apply. Your actual fees depend on a variety of factors, including your actual usage of AWS services.",
+		"Share Url": "https://calculator.aws/#/estimate?id=229f0a0529a955ae46228c6224c7bfc0d1ac68d1"
+	},
+	"Groups": {
+		"AquaInsight": {
+			"Services": [
+				{
+					"Service Name": "MQTT",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "16.23",
+						"upfront": "0.00",
+						"12 months": "194.76"
+					},
+					"Properties": {
+						"Number of devices (MQTT)": "1000",
+						"Average size of each message": "1 KB",
+						"Average size of each record": "1 KB",
+						"Average number of actions executed per rule": "1",
+						"Number of messages for a device": "8928",
+						"Number of Registry requests": "10000",
+						"Number of rules triggered": "8928"
+					}
+				},
+				{
+					"Service Name": "Amazon Simple Queue Service (SQS)",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "10.80",
+						"upfront": "0.00",
+						"12 months": "129.60"
+					},
+					"Properties": {
+						"DT Inbound: Not selected": "0 TB per month",
+						"DT Outbound: Not selected": "0 TB per month",
+						"Standard queue requests": "27 million per month"
+					}
+				},
+				{
+					"Service Name": "AWS Fargate",
+					"Description": "AquaInsight",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "227.19",
+						"upfront": "0.00",
+						"12 months": "2726.28"
+					},
+					"Properties": {
+						"Operating system": "Linux",
+						"CPU Architecture": "x86",
+						"Average duration": "1440 minutes",
+						"Number of tasks or pods": "3 per day",
+						"Amount of ephemeral storage allocated for Amazon ECS": "20 GB",
+						"Amount of memory allocated": "4 GB"
+					}
+				},
+				{
+					"Service Name": "Amazon Timestream",
+					"Description": "AquaInsight-db",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "866.08",
+						"upfront": "0.00",
+						"12 months": "10392.96"
+					},
+					"Properties": {
+						"InfluxDB Product": "Database Instance",
+						"Version": "InfluxDB2",
+						"Deployment Option": "Multi-AZ Read Replica/Cluster",
+						"Volume Type": "Influx IOPS Included with 12k IOPS",
+						"Instance Type": "db.influx.xlarge",
+						"Pricing Model": "OnDemand",
+						"Estimated Monthly Storage": "100 GB per month"
+					}
+				},
+				{
+					"Service Name": "Standard topics",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "3.50",
+						"upfront": "0.00",
+						"12 months": "42.00"
+					},
+					"Properties": {
+						"DT Inbound: Not selected": "0 TB per month",
+						"DT Outbound: Not selected": "0 TB per month",
+						"Requests": "4 million per month",
+						"Mobile Push Notifications": "4 million per month"
+					}
+				},
+				{
+					"Service Name": "Amazon Elastic Container Registry",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "0.10",
+						"upfront": "0.00",
+						"12 months": "1.20"
+					},
+					"Properties": {
+						"DT Inbound: Not selected": "0 TB per month",
+						"DT Outbound: Not selected": "0 TB per month",
+						"Amount of data stored": "1 GB per month"
+					}
+				},
+				{
+					"Service Name": "DynamoDB on-demand capacity",
+					"Description": "AquaInsight",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "0.89",
+						"upfront": "0.00",
+						"12 months": "10.68"
+					},
+					"Properties": {
+						"Table class": "Standard",
+						"Average item size (all attributes)": "2 KB",
+						"Data storage size": "3 GB"
+					}
+				},
+				{
+					"Service Name": "AWS Lambda",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "0.83",
+						"upfront": "0.00",
+						"12 months": "9.96"
+					},
+					"Properties": {
+						"Invoke Mode": "Buffered",
+						"Architecture": "x86",
+						"Number of requests": "450000 per month",
+						"Amount of ephemeral storage allocated": "512 MB"
+					}
+				},
+				{
+					"Service Name": "Anthropic",
+					"Description": "AquaInsight - gemma intergration",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "302.40",
+						"upfront": "0.00",
+						"12 months": "3628.80"
+					},
+					"Properties": {
+						"Select the inference route": "Global",
+						"Select the inference type": "On Demand - Standard",
+						"Average requests per minute": "2",
+						"Hours per day at this rate": "24",
+						"Average input tokens per request": "1000",
+						"Average output tokens per request": "500"
+					}
+				},
+				{
+					"Service Name": "Parameter Store",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "0.00",
+						"upfront": "0.00",
+						"12 months": "0.00"
+					},
+					"Properties": {
+						"Standard parameters": "40",
+						"Frequency of API interactions per parameter": "10 per minute"
+					}
+				},
+				{
+					"Service Name": "On-Premises Instance Management",
+					"Region": "Asia Pacific (Mumbai)",
+					"Status": "",
+					"Service Cost": {
+						"monthly": "0.00",
+						"upfront": "0.00",
+						"12 months": "0.00"
+					},
+					"Properties": {}
+				}
+			]
+		}
+	}
+}
